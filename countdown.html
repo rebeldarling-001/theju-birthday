@@ -56,7 +56,7 @@ function nextMidnightIST() {
 
   // Convert the next midnight in India to a UTC timestamp.
   const target = Date.parse(
-    `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}T22:57:00+05:30`
+    `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}T00:00:00+05:30`
   ) + 24*60*60*1000;
   return target;
 }
