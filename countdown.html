@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wishes Open Soon</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,sans-serif}
+body{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 35%,#142a52 0,#050914 45%,#020308 100%);
+  color:#fff;overflow:hidden;text-align:center;padding:24px
+}
+.card{
+  width:min(92vw,430px);padding:38px 22px;border:1px solid rgba(77,170,255,.45);
+  border-radius:26px;background:rgba(4,10,24,.78);
+  box-shadow:0 0 45px rgba(0,140,255,.18),inset 0 0 35px rgba(0,120,255,.06);
+  backdrop-filter:blur(10px)
+}
+.icon{font-size:42px;margin-bottom:10px}
+h1{margin:0 0 10px;font-size:25px;letter-spacing:2px}
+.sub{color:#aebbd2;font-size:14px;margin-bottom:28px}
+.timer{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.box{padding:17px 6px;border-radius:16px;background:rgba(16,31,58,.9);border:1px solid rgba(255,255,255,.09)}
+.num{font-size:32px;font-weight:800;line-height:1}
+.label{font-size:10px;color:#93a4bf;margin-top:7px;letter-spacing:1px}
+.open{display:none;margin-top:25px;padding:14px;border-radius:14px;background:#fff;color:#06101e;font-weight:800;text-decoration:none}
+.note{margin-top:25px;font-size:12px;color:#71809a}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">✨</div>
+  <h1>WISHES OPEN AT MIDNIGHT</h1>
+  <div class="sub">A little surprise is waiting for you…</div>
+  <div class="timer">
+    <div class="box"><div class="num" id="h">00</div><div class="label">HOURS</div></div>
+    <div class="box"><div class="num" id="m">00</div><div class="label">MINUTES</div></div>
+    <div class="box"><div class="num" id="s">00</div><div class="label">SECONDS</div></div>
+  </div>
+  <a class="open" id="open" href="https://rebeldarling-001.github.io/theju-birthday/">OPEN WISH ✨</a>
+  <div class="note" id="note">The page will open automatically at 12:00 AM.</div>
+</div>
+
+<script>
+const targetUrl = 'https://rebeldarling-001.github.io/theju-birthday/';
+
+function nextMidnightIST() {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone:'Asia/Kolkata', year:'numeric', month:'2-digit', day:'2-digit'
+  }).formatToParts(now);
+  const get = t => parts.find(p => p.type === t).value;
+  const y = +get('year'), mo = +get('month'), d = +get('day');
+
+  // Convert the next midnight in India to a UTC timestamp.
+  const target = Date.parse(
+    `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}T00:00:00+05:30`
+  ) + 24*60*60*1000;
+  return target;
+}
+
+let target = nextMidnightIST();
+
+function update() {
+  const diff = target - Date.now();
+  if (diff <= 0) {
+    document.getElementById('h').textContent='00';
+    document.getElementById('m').textContent='00';
+    document.getElementById('s').textContent='00';
+    document.getElementById('note').textContent='It’s time! Opening your wish…';
+    document.getElementById('open').style.display='block';
+    window.location.replace(targetUrl);
+    return;
+  }
+  const total = Math.floor(diff/1000);
+  const h = Math.floor(total/3600);
+  const m = Math.floor((total%3600)/60);
+  const s = total%60;
+  document.getElementById('h').textContent=String(h).padStart(2,'0');
+  document.getElementById('m').textContent=String(m).padStart(2,'0');
+  document.getElementById('s').textContent=String(s).padStart(2,'0');
+}
+update();
+setInterval(update,1000);
+</script>
+</body>
+</html>
